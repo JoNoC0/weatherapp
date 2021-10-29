@@ -21,10 +21,12 @@ Create search box for city
 - when clicking on city in search history
     - display current and future weather conditions
 */
+var cityInfoEl = document.getElementById("city-info")
 var temperatureEl = document.getElementById("temp")
 var humidityEl = document.getElementById("humidity")
 var windSpeedEl = document.getElementById("speed")
 var uvIndexEl = document.getElementById("uv")
+var weatherIconEl = document.getElementById("weather-icon")
 
 var apiKey = "4bf94cd55f931ea5fc3f98c36bdca5d5"
 
@@ -40,26 +42,41 @@ function getCityInfo() {
         .then(function(data) {
             console.log(data);
             // DOM manipulation add/modify HTML
+            var currentDate = new Date(data.dt*1000);
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth();
+            var year = currentDate.getFullYear();
+            cityInfoEl.innerHTML = data.name + " (" + month + "/" + day + "/" + year + ") ";
+            var weatherIcon = data.weather[0].icon;
+            weatherIconEl.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png")
+            weatherIconEl.setAttribute("alt", data.weather[0].description);
+
+            console.log(weatherIcon)
             temperatureEl.innerHTML = "Temperature: " + tempConvert(data.main.temp) + "&#176F";
             humidityEl.innerHTML = "Humidity: " + data.main.humidity + "%"; 
             windSpeedEl.innerHTML = "Wind Speed: " + speedConvert(data.wind.speed) + "MPH";
+            
             var lat = data.coord.lat;
             var lon = data.coord.lon;
-            var uvUrlEl = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&cnt=1";
-            fetch(uvUrlEl)
+            var uvUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid="+ apiKey;
+            console.log(uvUrl)
+            fetch(uvUrl)
                 .then(function(res) {
-                    console.log(res)
                     return res.json();
                 })
-                    uvIndexEl.innerHTML = "UV Index: " + res.data[0].coord
-                
+                    var uvIndex = document.createElement("span");
+                    uvIndex.setAttribute("class", "badge badge-danger");
+                    uvIndex.innerHTML = data.coord.value;
+                    uvIndexEl.innerHTML = "UV Index: " + uvUrl;
+                    uvIndexEl.append(uvIndex);
             
-
-        })
+            console.log(uvUrl);
+            })
         .catch(function(err) {
             console.log(err);
         });
-}
+    }
+    
 var submitBtn = document.getElementById("cityBtn");
 submitBtn.addEventListener("click", getCityInfo);
 
