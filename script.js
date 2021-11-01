@@ -46,31 +46,65 @@ function getCityInfo() {
             var day = currentDate.getDate();
             var month = currentDate.getMonth();
             var year = currentDate.getFullYear();
-            cityInfoEl.innerHTML = data.name + " (" + month + "/" + day + "/" + year + ") ";
+                cityInfoEl.innerHTML = data.name + " (" + month + "/" + day + "/" + year + ") ";
             var weatherIcon = data.weather[0].icon;
-            weatherIconEl.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png")
-            weatherIconEl.setAttribute("alt", data.weather[0].description);
-
-            console.log(weatherIcon)
+                weatherIconEl.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png")
+                weatherIconEl.setAttribute("alt", data.weather[0].description);
+                console.log(weatherIcon)
+            
             temperatureEl.innerHTML = "Temperature: " + tempConvert(data.main.temp) + "&#176F";
             humidityEl.innerHTML = "Humidity: " + data.main.humidity + "%"; 
             windSpeedEl.innerHTML = "Wind Speed: " + speedConvert(data.wind.speed) + "MPH";
             
-            var lat = data.coord.lat;
-            var lon = data.coord.lon;
-            var uvUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid="+ apiKey;
-            console.log(uvUrl)
-            fetch(uvUrl)
-                .then(function(res) {
-                    return res.json();
-                })
-                    var uvIndex = document.createElement("span");
-                    uvIndex.setAttribute("class", "badge badge-danger");
-                    uvIndex.innerHTML = data.coord.value;
-                    uvIndexEl.innerHTML = "UV Index: " + uvUrl;
-                    uvIndexEl.append(uvIndex);
-            
-            console.log(uvUrl);
+            //input data into api call
+function searchLocation(lat, long) {
+    console.log(searchLocation)
+    //pass coordinate data into weather fetch request
+    var locationApi =
+      "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+      lat +
+      "&lon=" +
+      long +
+      "&appid=" + apiKey + 
+      "units=imperial";
+      
+    fetch(locationApi).then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+        //   var currentTemp = data.current.temp;
+        //   var currentDewPoint = data.current.dew_point;
+        //   var currentWindSpeed = data.current.wind_speed;
+          var currentUv = data.current.uvi;
+        //   var weatherForecast = data.daily;
+  
+          //pass variables to current weather display
+        });
+        
+      } else {
+        alert("Error: " + response.statusText);
+      }
+      
+    });
+}
+            // var lat = data.coord.lat;
+            // var lon = data.coord.lon;
+            // var uvUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+            // console.log(uvUrl)
+            // fetch(uvUrl)
+            //     .then(function(res) {
+            //         console.log(uvUrl)
+            //         res.json();
+            //     })
+            //     .then(function(data) {
+            //         console.log(data.current.temp)
+                
+            //         var uvIndex = document.createElement("span");
+            //         uvIndex.setAttribute("class", "badge badge-danger");
+            //         uvIndex.innerHTML = data.coord.value;
+            //         uvIndexEl.innerHTML = "UV Index: " + uvUrl;
+            //         uvIndexEl.append(uvIndex);
+            //     })
+            // console.log(uvUrl);
             })
         .catch(function(err) {
             console.log(err);
