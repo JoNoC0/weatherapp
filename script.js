@@ -104,8 +104,37 @@ function searchLocation(lat, long) {
                 //   var currentDewPoint = data.current.dew_point;
                 //   var currentWindSpeed = data.current.wind_speed;
                 var currentUv = data.current.uvi;
-                //   var weatherForecast = data.daily;
+                uvButtonText = document.createElement("p");
+                uvButtonText.textContent = "UV Index:"
+                uvButton = document.createElement("button");
+                uvButton.textContent = currentUv
 
+                const uvContainer = document.querySelector("#uv");
+                uvButtonText.appendChild(uvButton);
+                uvContainer.appendChild(uvButtonText);
+
+                if (currentUv < 3) {
+                    uvButton.classList.add("btn-success")
+                } else if (currentUv < 6) {
+                    uvButton.classList.add("btn-warning")
+                } else {
+                    uvButton.classList.add("btn-danger");
+                }
+
+                //   var weatherForecast = data.daily;
+                for (let i = 1; i < 6; i++) {
+                    const day = data.daily[i];
+                    const dayDiv = document.querySelector("#day" + i)
+                    const temp = document.createElement("p")
+                    temp.textContent = Math.round(day.temp.day) + "°F"
+                    const date = document.createElement("p")
+                    date.textContent = new Date(day.dt * 1000).toLocaleDateString();
+
+
+                    dayDiv.appendChild(temp);
+                    dayDiv.appendChild(date);
+
+                }
                 //pass variables to current weather display
             });
 
